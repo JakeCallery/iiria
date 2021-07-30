@@ -26,6 +26,18 @@ type CurrentWeatherGetClient struct {
 
 //TODO: Research this: https://www.alexedwards.net/blog/how-to-properly-parse-a-json-request-body
 
+func (c *CurrentWeatherGetClient) CallExample() {
+	var jsonData map[string]interface{}
+	err := json.Unmarshal([]byte(ExampleResponse), &jsonData)
+
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	}
+
+	fmt.Printf("Data: %v", jsonData["data"])
+
+}
+
 func (c *CurrentWeatherGetClient) Call() /*(*http.Response, error)*/ {
 	var sb strings.Builder
 	sb.WriteString(baseURL)

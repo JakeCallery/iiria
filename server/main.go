@@ -32,6 +32,8 @@ func main() {
 		Timezone:  "America/New_York",
 	}
 
-	c.Call()
+	//resp, err := c.Call()
+
+	c.CallExample()
 
 }
