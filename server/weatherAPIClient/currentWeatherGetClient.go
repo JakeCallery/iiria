@@ -39,10 +39,12 @@ func (c *CurrentWeatherGetClient) Call() /*(*http.Response, error)*/ {
 	fmt.Printf("\nURL: " + sb.String() + "\n")
 
 	resp, err := netClient.Get(sb.String())
-	defer resp.Body.Close()
+
 	if err != nil {
 		log.Fatalf("Request Error: %+v", err)
 	}
+
+	defer resp.Body.Close()
 
 	var jsonData map[string]interface{}
 	bodyData, err := ioutil.ReadAll(resp.Body)
