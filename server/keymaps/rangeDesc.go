@@ -6,8 +6,8 @@ import (
 
 type RangeDesc []string
 
-func NewRangeDesc() []string {
-	a := []string{
+func NewRangeDesc() RangeDesc {
+	a := RangeDesc{
 		"Low",
 		"Low",
 		"Low",
@@ -26,7 +26,7 @@ func NewRangeDesc() []string {
 
 }
 
-func (rd RangeDesc) getDesc(idx int) (string, error) {
+func (rd RangeDesc) GetDesc(idx int) (string, error) {
 	if idx < 0 {
 		return "", fmt.Errorf("ERROR: Invalid index (%v) for RangeDesc.  Valid values are %v - %v", idx, 0, len(rd)-1)
 	}
