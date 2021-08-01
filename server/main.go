@@ -4,6 +4,7 @@ package main
 apikey=<apikey>
 latlong=lat,long
 baseurl=https://api.tomorrow.io/v4/timelines?
+localonly=true
 ****************************/
 
 import (
@@ -39,5 +40,7 @@ func main() {
 	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
 	log.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
 	log.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
+	log.Printf("UVIndex: %v", strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.UVIndex))
+	log.Printf("UVHealthConcern: %v", strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern))
 
 }

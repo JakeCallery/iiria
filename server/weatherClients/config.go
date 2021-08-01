@@ -25,6 +25,8 @@ func NewDefaultClientConfig() *clientConfig {
 			"temperature",
 			"precipitationType",
 			"weatherCode",
+			"uvIndex",
+			"uvHealthConcern",
 		},
 		[]string{"1m"},
 		"America/New_York",
