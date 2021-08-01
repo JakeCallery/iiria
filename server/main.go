@@ -9,6 +9,7 @@ baseurl=https://api.tomorrow.io/v4/timelines?
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/jakecallery/iiria/server/keymaps"
 	"github.com/jakecallery/iiria/server/weatherClients"
@@ -36,7 +37,7 @@ func main() {
 
 	log.Printf("Time: %v", crd.Data.Timelines[0].Intervals[0].StartTime)
 	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
-	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)
-	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)
+	log.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
+	log.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
 
 }
