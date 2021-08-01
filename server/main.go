@@ -40,7 +40,16 @@ func main() {
 	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
 	log.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
 	log.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
-	log.Printf("UVIndex: %v", strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.UVIndex))
-	log.Printf("UVHealthConcern: %v", strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern))
+
+	//TODO: Map uv data range into "words"
+	//0-2: Low
+	//3-5: Moderate
+	//6-7: High
+	//8-10: Very High
+	//11+: Extreme
+
+	rd := keymaps.NewRangeDesc()
+	log.Printf("UVIndex: %v", rd[crd.Data.Timelines[0].Intervals[0].Values.UVIndex])
+	log.Printf("UVHealthConcern: %v", rd[crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern])
 
 }
