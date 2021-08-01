@@ -7,12 +7,13 @@ import (
 )
 
 type clientConfig struct {
-	BaseURL   string
-	ApiKey    string
-	LatLong   string
-	Fields    []string
-	TimeSteps []string
-	Timezone  string
+	BaseURL         string
+	ApiKey          string
+	LatLong         string
+	Fields          []string
+	TimeSteps       []string
+	Timezone        string
+	ExampleResponse []byte
 }
 
 func NewDefaultClientConfig() *clientConfig {
