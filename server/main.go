@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/jakecallery/iiria/server/handlers"
@@ -87,9 +88,9 @@ func main() {
 		}
 	}()
 
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 10)
 	signal.Notify(sigChan, os.Interrupt)
-	signal.Notify(sigChan, os.Kill)
+	signal.Notify(sigChan, syscall.SIGTERM)
 	sig := <-sigChan
 	l.Println("Received terminate, graceful shutdown", sig)
 	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
