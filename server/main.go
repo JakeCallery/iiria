@@ -93,6 +93,7 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGTERM)
 	sig := <-sigChan
 	l.Println("Received terminate, graceful shutdown", sig)
-	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	tc, tcCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer tcCancel()
 	s.Shutdown(tc)
 }
