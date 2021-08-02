@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/jakecallery/iiria/server/handlers"
 	"github.com/jakecallery/iiria/server/keymaps"
@@ -69,6 +70,14 @@ func main() {
 	sm.Handle("/", wh)
 	sm.Handle("/health", hh)
 
-	http.ListenAndServe(":9090", sm)
+	s := &http.Server{
+		Addr:         ":9090",
+		Handler:      sm,
+		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  1 * time.Second,
+		WriteTimeout: 1 * time.Second,
+	}
+
+	s.ListenAndServe()
 
 }
