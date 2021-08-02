@@ -64,9 +64,10 @@ func main() {
 
 	l := log.New(os.Stdout, "[weather-api]", log.LstdFlags)
 	wh := handlers.NewCurrentWeather(l)
-
+	hh := handlers.NewHealth(l)
 	sm := http.NewServeMux()
 	sm.Handle("/", wh)
+	sm.Handle("/health", hh)
 
 	http.ListenAndServe(":9090", sm)
 
