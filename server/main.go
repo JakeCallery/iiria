@@ -9,9 +9,11 @@ localonly=true
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 
+	"github.com/jakecallery/iiria/server/handlers"
 	"github.com/jakecallery/iiria/server/keymaps"
 	"github.com/jakecallery/iiria/server/weatherClients"
 	"github.com/joho/godotenv"
@@ -59,5 +61,13 @@ func main() {
 
 	log.Printf("UVIndex: %v", uvIndex)
 	log.Printf("UVHealthConcern: %v", uvHealth)
+
+	l := log.New(os.Stdout, "[weather-api]", log.LstdFlags)
+	wh := handlers.NewCurrentWeather(l)
+
+	sm := http.NewServeMux()
+	sm.Handle("/", wh)
+
+	http.ListenAndServe(":9090", sm)
 
 }
