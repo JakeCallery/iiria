@@ -12,7 +12,7 @@ import (
 	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
-func (c *clientConfig) Call() (*CurrentResponseData, error) {
+func (c *ClientConfig) Call() (*CurrentResponseData, error) {
 
 	var body []byte
 	var err error
@@ -45,7 +45,7 @@ func (c *clientConfig) Call() (*CurrentResponseData, error) {
 
 }
 
-func buildURL(c *clientConfig) string {
+func buildURL(c *ClientConfig) string {
 	var sb strings.Builder
 	sb.WriteString(os.Getenv(keymaps.EnvKeyMap[keymaps.BaseURL]))
 	sb.WriteString("location=" + c.LatLong)
@@ -71,7 +71,7 @@ func jsonToStruct(d []byte, crd *CurrentResponseData) error {
 
 }
 
-func getData(c *clientConfig) ([]byte, error) {
+func getData(c *ClientConfig) ([]byte, error) {
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
