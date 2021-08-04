@@ -1,4 +1,4 @@
-module github.com/jakecallery/iiria/server
+module github.com/jakecallery/iiria/apiServer
 
 go 1.16
 

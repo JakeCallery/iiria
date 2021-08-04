@@ -8,24 +8,18 @@ localonly=true
 ****************************/
 
 import (
-	"context"
 	"log"
-	"net/http"
 	"os"
-	"os/signal"
 	"strconv"
-	"syscall"
-	"time"
 
-	"github.com/jakecallery/iiria/server/handlers"
-	"github.com/jakecallery/iiria/server/keymaps"
-	"github.com/jakecallery/iiria/server/weatherClients"
+	"github.com/jakecallery/iiria/worker/keymaps"
+	"github.com/jakecallery/iiria/worker/weatherClients"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
@@ -66,34 +60,4 @@ func main() {
 	log.Printf("UVIndex: %v", uvIndex)
 	log.Printf("UVHealthConcern: %v", uvHealth)
 
-	l := log.New(os.Stdout, "[weather-api]", log.LstdFlags)
-	wh := handlers.NewCurrentWeather(l)
-	hh := handlers.NewHealth(l)
-	sm := http.NewServeMux()
-	sm.Handle("/", wh)
-	sm.Handle("/health", hh)
-
-	s := &http.Server{
-		Addr:         ":9090",
-		Handler:      sm,
-		IdleTimeout:  120 * time.Second,
-		ReadTimeout:  1 * time.Second,
-		WriteTimeout: 1 * time.Second,
-	}
-
-	go func() {
-		err := s.ListenAndServe()
-		if err != nil {
-			l.Fatal(err)
-		}
-	}()
-
-	sigChan := make(chan os.Signal, 10)
-	signal.Notify(sigChan, os.Interrupt)
-	signal.Notify(sigChan, syscall.SIGTERM)
-	sig := <-sigChan
-	l.Println("Received terminate, graceful shutdown", sig)
-	tc, tcCancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer tcCancel()
-	s.Shutdown(tc)
 }
