@@ -12,12 +12,15 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/jakecallery/iiria/worker/cacheClient"
 	"github.com/jakecallery/iiria/worker/keymaps"
 	"github.com/jakecallery/iiria/worker/weatherClients"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	l := log.New(os.Stdout, "[WorkerMain]: ", log.LstdFlags)
 
 	err := godotenv.Load("../.env")
 	if err != nil {
@@ -33,31 +36,39 @@ func main() {
 	crd, err := c.Call()
 
 	if err != nil {
-		log.Fatalf("[ERROR]: Error Calling API: %v", err)
+		l.Fatalf("[ERROR]: Error Calling API: %v", err)
 	}
 
-	log.Printf("Time: %v", crd.Data.Timelines[0].Intervals[0].StartTime)
-	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
-	log.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
-	log.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
+	l.Printf("Time: %v", crd.Data.Timelines[0].Intervals[0].StartTime)
+	l.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
+	l.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
+	l.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
 
 	rd := keymaps.NewRangeDesc()
 	uvIndex, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVIndex)
 
 	if err != nil {
-		log.Printf("[ERROR]: Failed to retrieve a valid uvIndex: %v\n", err)
-		log.Printf("[ERROR]: Setting to 'unknown'")
+		l.Printf("[ERROR]: Failed to retrieve a valid uvIndex: %v\n", err)
+		l.Printf("[ERROR]: Setting to 'unknown'")
 		uvIndex = "Unknown"
 	}
 
 	uvHealth, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern)
 	if err != nil {
-		log.Printf("[ERROR]: Failed to retrieve a valid uvHealth Concern: %v", err)
-		log.Printf("[ERROR]: setting to 'Unknown'")
+		l.Printf("[ERROR]: Failed to retrieve a valid uvHealth Concern: %v", err)
+		l.Printf("[ERROR]: setting to 'Unknown'")
 		uvHealth = "Unknown"
 	}
 
-	log.Printf("UVIndex: %v", uvIndex)
-	log.Printf("UVHealthConcern: %v", uvHealth)
+	l.Printf("UVIndex: %v", uvIndex)
+	l.Printf("UVHealthConcern: %v", uvHealth)
+
+	cacheClient := cacheClient.NewRedisClient(log.New(os.Stdout, "[cacheClient]: ", log.LstdFlags))
+	cacheClient.Init()
+	err = cacheClient.CheckConnection()
+
+	if err != nil {
+		l.Fatalf("Failed to get a good cache server connection: %v", err)
+	}
 
 }

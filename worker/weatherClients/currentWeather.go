@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jakecallery/iiria/server/keymaps"
+	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
 func (c *clientConfig) Call() (*CurrentResponseData, error) {
