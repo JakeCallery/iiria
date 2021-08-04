@@ -1,0 +1,4 @@
+github.com/jakecallery/iiria/server v0.0.0-20210802124936-d81a6a40f8da h1:pZKXey7IocJm0SX3S+y8U9SwIJzfymGUBsi/nNViEEc=
+github.com/jakecallery/iiria/server v0.0.0-20210802124936-d81a6a40f8da/go.mod h1:aIpYxhHcw2YSW5EccbRICjIZ+uiD6coZ7wcW0rcvLFc=
+github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
+github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=

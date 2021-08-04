@@ -3,7 +3,7 @@ package weatherClients
 import (
 	"os"
 
-	"github.com/jakecallery/iiria/server/keymaps"
+	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
 type clientConfig struct {
