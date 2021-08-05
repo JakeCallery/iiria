@@ -8,13 +8,9 @@ localonly=true
 ****************************/
 
 import (
-	"context"
 	"log"
 	"os"
-	"os/signal"
 	"strconv"
-	"syscall"
-	"time"
 
 	"github.com/jakecallery/iiria/worker/cacheClient"
 	"github.com/jakecallery/iiria/worker/keymaps"
@@ -75,13 +71,17 @@ func main() {
 		l.Fatalf("Failed to get a good cache server connection: %v", err)
 	}
 
-	//Shutdown handling
-	sigChan := make(chan os.Signal, 10)
-	signal.Notify(sigChan, os.Interrupt)
-	signal.Notify(sigChan, syscall.SIGTERM)
-	sig := <-sigChan
-	l.Println("Received terminate, graceful shutdown", sig)
-	_, tcCancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer tcCancel()
+	ww := NewWeatherWorker(log.New(os.Stdout, "[WeatherWorker]: ", log.LstdFlags), c)
+	ww.Run()
 
+	/*
+		//Shutdown handling
+		sigChan := make(chan os.Signal, 10)
+		signal.Notify(sigChan, os.Interrupt)
+		signal.Notify(sigChan, syscall.SIGTERM)
+		sig := <-sigChan
+		l.Println("Received terminate, graceful shutdown", sig)
+		_, tcCancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer tcCancel()
+	*/
 }
