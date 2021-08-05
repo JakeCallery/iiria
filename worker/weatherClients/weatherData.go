@@ -1,6 +1,6 @@
 package weatherClients
 
-type CurrentResponseData struct {
+type WeatherData struct {
 	Data struct {
 		Timelines []struct {
 			Timestep  string `json:"timestep"`

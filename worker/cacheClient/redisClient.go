@@ -2,9 +2,12 @@ package cacheClient
 
 import (
 	"context"
+	"encoding/json"
 	"log"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/jakecallery/iiria/worker/weatherClients"
 )
 
 type RedisClient struct {
@@ -38,6 +41,25 @@ func (c *RedisClient) Init() {
 	})
 
 	c.isReady = true
+}
+
+//TODO: Implement RedisJSON
+func (c *RedisClient) Save(wd *weatherClients.WeatherData) error {
+	intervals := wd.Data.Timelines[0].Intervals
+
+	for _, interval := range intervals {
+		st := strings.ReplaceAll(string(interval.StartTime), ":", "_")
+		data, err := json.Marshal(interval.Values)
+		if err != nil {
+			c.l.Printf("Error marshaling json from weather to cache: %v", err)
+			return err
+		}
+		c.l.Printf("Saving with Key: %v", st)
+		c.l.Printf("Trying to save: %v", string(data))
+		c.redisClient.Set(c.ctx, st, string(data), 0)
+	}
+
+	return nil
 }
 
 func (c *RedisClient) CheckConnection() error {

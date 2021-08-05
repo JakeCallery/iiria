@@ -12,7 +12,7 @@ import (
 	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
-func (c *ClientConfig) Call() (*CurrentResponseData, error) {
+func (c *ClientConfig) Call() (*WeatherData, error) {
 
 	var body []byte
 	var err error
@@ -31,7 +31,7 @@ func (c *ClientConfig) Call() (*CurrentResponseData, error) {
 		body = []byte(c.ExampleResponse)
 	}
 
-	crd := CurrentResponseData{}
+	crd := WeatherData{}
 	err = jsonToStruct(body, &crd)
 
 	if err != nil {
@@ -59,7 +59,7 @@ func buildURL(c *ClientConfig) string {
 	return sb.String()
 }
 
-func jsonToStruct(d []byte, crd *CurrentResponseData) error {
+func jsonToStruct(d []byte, crd *WeatherData) error {
 	err := json.Unmarshal(d, &crd)
 
 	if err != nil {

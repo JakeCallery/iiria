@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jakecallery/iiria/worker/cacheClient"
 	"github.com/jakecallery/iiria/worker/keymaps"
 	"github.com/jakecallery/iiria/worker/weatherClients"
 )
@@ -14,14 +15,16 @@ import (
 type WeatherWorker struct {
 	l        *log.Logger
 	wcl      *weatherClients.ClientConfig
+	ccl      *cacheClient.RedisClient //TODO: Use the interface CacheClient instead
 	t        *time.Ticker
 	stopChan chan bool
 }
 
-func NewWeatherWorker(l *log.Logger, wcl *weatherClients.ClientConfig, stopChan chan bool) *WeatherWorker {
+func NewWeatherWorker(l *log.Logger, wcl *weatherClients.ClientConfig, ccl *cacheClient.RedisClient, stopChan chan bool) *WeatherWorker {
 	return &WeatherWorker{
 		l,
 		wcl,
+		ccl,
 		nil,
 		stopChan,
 	}
@@ -85,4 +88,6 @@ func (ww *WeatherWorker) get(c *weatherClients.ClientConfig) {
 
 	ww.l.Printf("UVIndex: %v", uvIndex)
 	ww.l.Printf("UVHealthConcern: %v", uvHealth)
+
+	ww.ccl.Save(crd)
 }

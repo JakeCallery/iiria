@@ -39,7 +39,7 @@ func main() {
 
 	stopChan := make(chan bool)
 	c := weatherClients.NewDefaultClientConfig()
-	ww := NewWeatherWorker(log.New(os.Stdout, "[WeatherWorker]: ", log.LstdFlags), c, stopChan)
+	ww := NewWeatherWorker(log.New(os.Stdout, "[WeatherWorker]: ", log.LstdFlags), c, cacheClient, stopChan)
 	go func() {
 		ww.Run()
 	}()
