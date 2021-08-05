@@ -12,12 +12,10 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 	"time"
 
 	"github.com/jakecallery/iiria/worker/cacheClient"
-	"github.com/jakecallery/iiria/worker/keymaps"
 	"github.com/jakecallery/iiria/worker/weatherClients"
 	"github.com/joho/godotenv"
 )
@@ -31,42 +29,6 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	c := weatherClients.NewDefaultClientConfig()
-
-	if os.Getenv(keymaps.EnvKeyMap[keymaps.LocalOnly]) == "true" {
-		c.ExampleResponse = weatherClients.ExampleResponse
-	}
-
-	crd, err := c.Call()
-
-	if err != nil {
-		l.Fatalf("[ERROR]: Error Calling API: %v", err)
-	}
-
-	l.Printf("Time: %v", crd.Data.Timelines[0].Intervals[0].StartTime)
-	l.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
-	l.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
-	l.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
-
-	rd := keymaps.NewRangeDesc()
-	uvIndex, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVIndex)
-
-	if err != nil {
-		l.Printf("[ERROR]: Failed to retrieve a valid uvIndex: %v\n", err)
-		l.Printf("[ERROR]: Setting to 'unknown'")
-		uvIndex = "Unknown"
-	}
-
-	uvHealth, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern)
-	if err != nil {
-		l.Printf("[ERROR]: Failed to retrieve a valid uvHealth Concern: %v", err)
-		l.Printf("[ERROR]: setting to 'Unknown'")
-		uvHealth = "Unknown"
-	}
-
-	l.Printf("UVIndex: %v", uvIndex)
-	l.Printf("UVHealthConcern: %v", uvHealth)
-
 	cacheClient := cacheClient.NewRedisClient(log.New(os.Stdout, "[cacheClient]: ", log.LstdFlags))
 	cacheClient.Init()
 	err = cacheClient.CheckConnection()
@@ -76,6 +38,7 @@ func main() {
 	}
 
 	stopChan := make(chan bool)
+	c := weatherClients.NewDefaultClientConfig()
 	ww := NewWeatherWorker(log.New(os.Stdout, "[WeatherWorker]: ", log.LstdFlags), c, stopChan)
 	go func() {
 		ww.Run()
