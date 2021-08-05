@@ -15,7 +15,7 @@ import (
 type WeatherWorker struct {
 	l        *log.Logger
 	wcl      *weatherClients.ClientConfig
-	ccl      cacheClient.CacheClient //TODO: Use the interface CacheClient instead
+	ccl      cacheClient.CacheClient
 	t        *time.Ticker
 	stopChan chan bool
 }
@@ -52,7 +52,6 @@ func (ww *WeatherWorker) Stop() {
 }
 
 func (ww *WeatherWorker) get(c *weatherClients.ClientConfig) {
-	//TODO: store in cache
 	ww.l.Println("Tick")
 
 	if os.Getenv(keymaps.EnvKeyMap[keymaps.LocalOnly]) == "true" {
