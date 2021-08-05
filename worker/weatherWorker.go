@@ -15,12 +15,12 @@ import (
 type WeatherWorker struct {
 	l        *log.Logger
 	wcl      *weatherClients.ClientConfig
-	ccl      *cacheClient.RedisClient //TODO: Use the interface CacheClient instead
+	ccl      cacheClient.CacheClient //TODO: Use the interface CacheClient instead
 	t        *time.Ticker
 	stopChan chan bool
 }
 
-func NewWeatherWorker(l *log.Logger, wcl *weatherClients.ClientConfig, ccl *cacheClient.RedisClient, stopChan chan bool) *WeatherWorker {
+func NewWeatherWorker(l *log.Logger, wcl *weatherClients.ClientConfig, ccl cacheClient.CacheClient, stopChan chan bool) *WeatherWorker {
 	return &WeatherWorker{
 		l,
 		wcl,
