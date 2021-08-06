@@ -6,7 +6,7 @@ import (
 	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
-type clientConfig struct {
+type ClientConfig struct {
 	BaseURL         string
 	ApiKey          string
 	LatLong         string
@@ -15,8 +15,8 @@ type clientConfig struct {
 	Timezone        string
 	ExampleResponse []byte
 }
+func NewDefaultClientConfig() *ClientConfig {
 
-func NewDefaultClientConfig() *clientConfig {
 	return NewClientConfig(
 		os.Getenv(keymaps.EnvKeyMap[keymaps.BaseURL]),
 		os.Getenv(keymaps.EnvKeyMap[keymaps.APIkey]),
@@ -40,9 +40,11 @@ func NewClientConfig(
 	fields []string,
 	timeSteps []string,
 	timeZone string,
-) *clientConfig {
 
-	cc := new(clientConfig)
+) *ClientConfig {
+
+	cc := new(ClientConfig)
+
 	cc.BaseURL = baseURL
 	cc.ApiKey = apiKey
 	cc.LatLong = latLong

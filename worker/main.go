@@ -8,56 +8,52 @@ localonly=true
 ****************************/
 
 import (
+	"context"
 	"log"
 	"os"
-	"strconv"
+	"os/signal"
+	"syscall"
+	"time"
 
-	"github.com/jakecallery/iiria/worker/keymaps"
+	"github.com/jakecallery/iiria/worker/cacheClient"
+
 	"github.com/jakecallery/iiria/worker/weatherClients"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	err := godotenv.Load("../.env")
+
+	l := log.New(os.Stdout, "[WorkerMain]: ", log.LstdFlags)
+
+	err := godotenv.Load("./.env")
+
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
+	cacheClient := cacheClient.NewRedisClient(log.New(os.Stdout, "[cacheClient]: ", log.LstdFlags))
+	cacheClient.Init()
+	err = cacheClient.CheckConnection()
+
+	if err != nil {
+		l.Fatalf("Failed to get a good cache server connection: %v", err)
+	}
+
+	stopChan := make(chan bool)
 	c := weatherClients.NewDefaultClientConfig()
+	ww := NewWeatherWorker(log.New(os.Stdout, "[WeatherWorker]: ", log.LstdFlags), c, cacheClient, stopChan)
+	go func() {
+		ww.Run()
+	}()
 
-	if os.Getenv(keymaps.EnvKeyMap[keymaps.LocalOnly]) == "true" {
-		c.ExampleResponse = weatherClients.ExampleResponse
-	}
-
-	crd, err := c.Call()
-
-	if err != nil {
-		log.Fatalf("[ERROR]: Error Calling API: %v", err)
-	}
-
-	log.Printf("Time: %v", crd.Data.Timelines[0].Intervals[0].StartTime)
-	log.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
-	log.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
-	log.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
-
-	rd := keymaps.NewRangeDesc()
-	uvIndex, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVIndex)
-
-	if err != nil {
-		log.Printf("[ERROR]: Failed to retrieve a valid uvIndex: %v\n", err)
-		log.Printf("[ERROR]: Setting to 'unknown'")
-		uvIndex = "Unknown"
-	}
-
-	uvHealth, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern)
-	if err != nil {
-		log.Printf("[ERROR]: Failed to retrieve a valid uvHealth Concern: %v", err)
-		log.Printf("[ERROR]: setting to 'Unknown'")
-		uvHealth = "Unknown"
-	}
-
-	log.Printf("UVIndex: %v", uvIndex)
-	log.Printf("UVHealthConcern: %v", uvHealth)
-
+	//Shutdown handling
+	sigChan := make(chan os.Signal, 10)
+	signal.Notify(sigChan, os.Interrupt)
+	signal.Notify(sigChan, syscall.SIGTERM)
+	sig := <-sigChan
+	l.Println("Received terminate, graceful shutdown", sig)
+	_, tcCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ww.Stop()
+	defer tcCancel()
 }

@@ -9,16 +9,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jakecallery/iiria/server/keymaps"
+
+	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
-func (c *clientConfig) Call() (*CurrentResponseData, error) {
+func (c *ClientConfig) Call() (*WeatherData, error) {
+
 
 	var body []byte
 	var err error
 
 	if c.ExampleResponse == nil {
-		log.Println("Going to internet to get data...")
+
 		body, err = getData(c)
 
 		if err != nil {
@@ -31,7 +33,9 @@ func (c *clientConfig) Call() (*CurrentResponseData, error) {
 		body = []byte(c.ExampleResponse)
 	}
 
-	crd := CurrentResponseData{}
+
+	crd := WeatherData{}
+
 	err = jsonToStruct(body, &crd)
 
 	if err != nil {
@@ -39,13 +43,13 @@ func (c *clientConfig) Call() (*CurrentResponseData, error) {
 		return nil, err
 	}
 
-	//log.Printf("Struct: \n%+v", crd)
-
 	return &crd, nil
 
 }
 
-func buildURL(c *clientConfig) string {
+
+func buildURL(c *ClientConfig) string {
+
 	var sb strings.Builder
 	sb.WriteString(os.Getenv(keymaps.EnvKeyMap[keymaps.BaseURL]))
 	sb.WriteString("location=" + c.LatLong)
@@ -55,15 +59,16 @@ func buildURL(c *clientConfig) string {
 	sb.WriteString("&timezone=" + c.Timezone)
 	sb.WriteString("&apikey=" + c.ApiKey)
 
-	log.Printf("\nURL: " + sb.String() + "\n")
+
 	return sb.String()
 }
 
-func jsonToStruct(d []byte, crd *CurrentResponseData) error {
+func jsonToStruct(d []byte, crd *WeatherData) error {
 	err := json.Unmarshal(d, &crd)
 
 	if err != nil {
-		log.Fatalf("Failed to marshal json: %v", err)
+		log.Fatalf("Failed to unmarshal json: %v", err)
+
 		return err
 	}
 
@@ -71,7 +76,9 @@ func jsonToStruct(d []byte, crd *CurrentResponseData) error {
 
 }
 
-func getData(c *clientConfig) ([]byte, error) {
+
+func getData(c *ClientConfig) ([]byte, error) {
+
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
@@ -90,6 +97,16 @@ func getData(c *clientConfig) ([]byte, error) {
 		log.Printf("Failed to ready body from response: %v\n", err)
 		return nil, err
 	}
+
+	log.Printf("Ratelimit-Limit: %v", resp.Header["Ratelimit-Limit"])
+	log.Printf("Ratelimit-Remaining: %v", resp.Header["Ratelimit-Remaining"])
+	log.Printf("Ratelimit-Reset: %v", resp.Header["Ratelimit-Reset"])
+	log.Printf("X-Ratelimit-Limit-Day: %v", resp.Header["X-Ratelimit-Limit-Day"])
+	log.Printf("X-Ratelimit-Limit-Hour: %v", resp.Header["X-Ratelimit-Limit-Hour"])
+	log.Printf("X-Ratelimit-Limit-Second: %v", resp.Header["X-Ratelimit-Limit-Second"])
+	log.Printf("X-Ratelimit-Remaining-Day: %v", resp.Header["X-Ratelimit-Remaining-Day"])
+	log.Printf("X-Ratelimit-Remaining-Hour: %v", resp.Header["X-Ratelimit-Remaining-Hour"])
+	log.Printf("X-Ratelimit-Remaining-Second: %v", resp.Header["X-Ratelimit-Remaining-Second"])
 
 	return body, nil
 }
