@@ -15,8 +15,8 @@ type ClientConfig struct {
 	Timezone        string
 	ExampleResponse []byte
 }
-
 func NewDefaultClientConfig() *ClientConfig {
+
 	return NewClientConfig(
 		os.Getenv(keymaps.EnvKeyMap[keymaps.BaseURL]),
 		os.Getenv(keymaps.EnvKeyMap[keymaps.APIkey]),
@@ -40,9 +40,11 @@ func NewClientConfig(
 	fields []string,
 	timeSteps []string,
 	timeZone string,
+
 ) *ClientConfig {
 
 	cc := new(ClientConfig)
+
 	cc.BaseURL = baseURL
 	cc.ApiKey = apiKey
 	cc.LatLong = latLong

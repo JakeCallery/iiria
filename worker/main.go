@@ -16,15 +16,18 @@ import (
 	"time"
 
 	"github.com/jakecallery/iiria/worker/cacheClient"
+
 	"github.com/jakecallery/iiria/worker/weatherClients"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 
+
 	l := log.New(os.Stdout, "[WorkerMain]: ", log.LstdFlags)
 
 	err := godotenv.Load("./.env")
+
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
@@ -53,5 +56,4 @@ func main() {
 	_, tcCancel := context.WithTimeout(context.Background(), 30*time.Second)
 	ww.Stop()
 	defer tcCancel()
-
 }

@@ -9,15 +9,18 @@ import (
 	"strings"
 	"time"
 
+
 	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
 func (c *ClientConfig) Call() (*WeatherData, error) {
 
+
 	var body []byte
 	var err error
 
 	if c.ExampleResponse == nil {
+
 		body, err = getData(c)
 
 		if err != nil {
@@ -30,7 +33,9 @@ func (c *ClientConfig) Call() (*WeatherData, error) {
 		body = []byte(c.ExampleResponse)
 	}
 
+
 	crd := WeatherData{}
+
 	err = jsonToStruct(body, &crd)
 
 	if err != nil {
@@ -42,7 +47,9 @@ func (c *ClientConfig) Call() (*WeatherData, error) {
 
 }
 
+
 func buildURL(c *ClientConfig) string {
+
 	var sb strings.Builder
 	sb.WriteString(os.Getenv(keymaps.EnvKeyMap[keymaps.BaseURL]))
 	sb.WriteString("location=" + c.LatLong)
@@ -52,6 +59,7 @@ func buildURL(c *ClientConfig) string {
 	sb.WriteString("&timezone=" + c.Timezone)
 	sb.WriteString("&apikey=" + c.ApiKey)
 
+
 	return sb.String()
 }
 
@@ -60,6 +68,7 @@ func jsonToStruct(d []byte, crd *WeatherData) error {
 
 	if err != nil {
 		log.Fatalf("Failed to unmarshal json: %v", err)
+
 		return err
 	}
 
@@ -67,7 +76,9 @@ func jsonToStruct(d []byte, crd *WeatherData) error {
 
 }
 
+
 func getData(c *ClientConfig) ([]byte, error) {
+
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
@@ -96,5 +107,6 @@ func getData(c *ClientConfig) ([]byte, error) {
 	log.Printf("X-Ratelimit-Remaining-Day: %v", resp.Header["X-Ratelimit-Remaining-Day"])
 	log.Printf("X-Ratelimit-Remaining-Hour: %v", resp.Header["X-Ratelimit-Remaining-Hour"])
 	log.Printf("X-Ratelimit-Remaining-Second: %v", resp.Header["X-Ratelimit-Remaining-Second"])
+
 	return body, nil
 }
