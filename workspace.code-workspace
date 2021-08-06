@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "apiServer"
+		},
+		{
+			"path": "worker"
+		}
+	],
+	"remoteAuthority": "wsl+Ubuntu-20.04"
+}
