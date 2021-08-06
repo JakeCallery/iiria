@@ -31,7 +31,8 @@ func NewWeatherWorker(l *log.Logger, wcl *weatherClients.ClientConfig, ccl cache
 }
 
 func (ww *WeatherWorker) Run() {
-	ww.t = time.NewTicker(time.Second)
+	ww.get(ww.wcl) //Run first pull before timer to prime cache
+	ww.t = time.NewTicker(5 * time.Minute)
 	defer ww.t.Stop()
 	for {
 		select {

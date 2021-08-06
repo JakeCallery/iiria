@@ -18,7 +18,6 @@ func (c *ClientConfig) Call() (*WeatherData, error) {
 	var err error
 
 	if c.ExampleResponse == nil {
-		log.Println("Going to internet to get data...")
 		body, err = getData(c)
 
 		if err != nil {
@@ -39,8 +38,6 @@ func (c *ClientConfig) Call() (*WeatherData, error) {
 		return nil, err
 	}
 
-	//log.Printf("Struct: \n%+v", crd)
-
 	return &crd, nil
 
 }
@@ -55,7 +52,6 @@ func buildURL(c *ClientConfig) string {
 	sb.WriteString("&timezone=" + c.Timezone)
 	sb.WriteString("&apikey=" + c.ApiKey)
 
-	log.Printf("\nURL: " + sb.String() + "\n")
 	return sb.String()
 }
 
@@ -63,7 +59,7 @@ func jsonToStruct(d []byte, crd *WeatherData) error {
 	err := json.Unmarshal(d, &crd)
 
 	if err != nil {
-		log.Fatalf("Failed to marshal json: %v", err)
+		log.Fatalf("Failed to unmarshal json: %v", err)
 		return err
 	}
 
@@ -91,5 +87,14 @@ func getData(c *ClientConfig) ([]byte, error) {
 		return nil, err
 	}
 
+	log.Printf("Ratelimit-Limit: %v", resp.Header["Ratelimit-Limit"])
+	log.Printf("Ratelimit-Remaining: %v", resp.Header["Ratelimit-Remaining"])
+	log.Printf("Ratelimit-Reset: %v", resp.Header["Ratelimit-Reset"])
+	log.Printf("X-Ratelimit-Limit-Day: %v", resp.Header["X-Ratelimit-Limit-Day"])
+	log.Printf("X-Ratelimit-Limit-Hour: %v", resp.Header["X-Ratelimit-Limit-Hour"])
+	log.Printf("X-Ratelimit-Limit-Second: %v", resp.Header["X-Ratelimit-Limit-Second"])
+	log.Printf("X-Ratelimit-Remaining-Day: %v", resp.Header["X-Ratelimit-Remaining-Day"])
+	log.Printf("X-Ratelimit-Remaining-Hour: %v", resp.Header["X-Ratelimit-Remaining-Hour"])
+	log.Printf("X-Ratelimit-Remaining-Second: %v", resp.Header["X-Ratelimit-Remaining-Second"])
 	return body, nil
 }

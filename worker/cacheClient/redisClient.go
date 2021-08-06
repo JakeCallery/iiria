@@ -54,8 +54,6 @@ func (c *RedisClient) Save(wd *weatherClients.WeatherData) error {
 			c.l.Printf("Error marshaling json from weather to cache: %v", err)
 			return err
 		}
-		c.l.Printf("Saving with Key: %v", st)
-		c.l.Printf("Trying to save: %v", string(data))
 		c.redisClient.Set(c.ctx, st, string(data), 0)
 	}
 
