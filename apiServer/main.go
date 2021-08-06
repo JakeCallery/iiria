@@ -16,17 +16,24 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jakecallery/iiria/apiServer/dbClient"
 	"github.com/jakecallery/iiria/apiServer/handlers"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
 	l := log.New(os.Stdout, "[weather-api]", log.LstdFlags)
+
+	//Set up redis connection
+	db := dbClient.NewRedisClient(l)
+	db.Init()
+	db.CheckConnection()
+
 	wh := handlers.NewCurrentWeather(l)
 	hh := handlers.NewHealth(l)
 	sm := http.NewServeMux()
