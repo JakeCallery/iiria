@@ -42,7 +42,7 @@ func main() {
 	wh := handlers.NewCurrentWeather(l, dg)
 	hh := handlers.NewHealth(l)
 	sm := http.NewServeMux()
-	sm.Handle("/", wh)
+	sm.Handle("/weather", wh)
 	sm.Handle("/health", hh)
 
 	s := &http.Server{
