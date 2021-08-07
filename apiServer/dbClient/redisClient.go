@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/jakecallery/iiria/apiServer/data"
 )
 
 type RedisClient struct {
@@ -41,9 +40,18 @@ func (c *RedisClient) Init() {
 	c.isReady = true
 }
 
-func (c *RedisClient) DataFromTime(t string) *data.WeatherData {
+func (c *RedisClient) DataFromTime(t string) (string, error) {
 	c.l.Println("data from time")
-	return &data.WeatherData{}
+
+	res, err := c.redisClient.Get(c.ctx, t).Result()
+	if err != nil {
+		c.l.Printf("[ERROR]: Error getting data from cache: %v", err)
+		return "", err
+	}
+
+	c.l.Printf("Result: %+v", res)
+
+	return res, nil
 }
 
 func (c *RedisClient) CheckConnection() error {

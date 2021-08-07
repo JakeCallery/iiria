@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -19,13 +18,13 @@ func NewCurrentWeather(l *log.Logger, dg *dataGetter.DataGetter) *CurrentWeather
 }
 
 func (h *CurrentWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	h.l.Println("Hello")
-	d, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		h.l.Printf("Request Error: %v", err)
-		http.Error(rw, "oops", http.StatusBadRequest)
-		return
-	}
-	h.dg.GetData()
-	fmt.Fprintf(rw, "Data: %s\n", d)
+	h.l.Println("Data Requested")
+	// d, err := ioutil.ReadAll(r.Body)
+	// if err != nil {
+	// 	h.l.Printf("Request Error: %v", err)
+	// 	http.Error(rw, "oops", http.StatusBadRequest)
+	// 	return
+	// }
+	wd, _ := h.dg.GetData()
+	fmt.Fprintf(rw, "Data: %+v\n", wd)
 }
