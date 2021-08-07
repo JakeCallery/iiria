@@ -48,6 +48,7 @@ func (c *RedisClient) Save(wd *weatherClients.WeatherData) error {
 	intervals := wd.Data.Timelines[0].Intervals
 
 	for _, interval := range intervals {
+		//TODO: Basic string santization/string checking
 		st := strings.ReplaceAll(string(interval.StartTime), ":", "_")
 		data, err := json.Marshal(interval.Values)
 		if err != nil {
