@@ -16,6 +16,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jakecallery/iiria/apiServer/dataGetter"
 	"github.com/jakecallery/iiria/apiServer/dbClient"
 	"github.com/jakecallery/iiria/apiServer/handlers"
 	"github.com/joho/godotenv"
@@ -37,8 +38,8 @@ func main() {
 	//TODO: add instanciate DataGetter here
 	//Pass that into NewCurrentWeather
 	//Have currentWeather handler call getData
-
-	wh := handlers.NewCurrentWeather(l)
+	dg := dataGetter.NewDataGetter(l, db)
+	wh := handlers.NewCurrentWeather(l, dg)
 	hh := handlers.NewHealth(l)
 	sm := http.NewServeMux()
 	sm.Handle("/", wh)

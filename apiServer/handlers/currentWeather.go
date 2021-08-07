@@ -5,14 +5,17 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/jakecallery/iiria/apiServer/dataGetter"
 )
 
 type CurrentWeather struct {
-	l *log.Logger
+	l  *log.Logger
+	dg *dataGetter.DataGetter
 }
 
-func NewCurrentWeather(l *log.Logger) *CurrentWeather {
-	return &CurrentWeather{l}
+func NewCurrentWeather(l *log.Logger, dg *dataGetter.DataGetter) *CurrentWeather {
+	return &CurrentWeather{l, dg}
 }
 
 func (h *CurrentWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
@@ -23,6 +26,6 @@ func (h *CurrentWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "oops", http.StatusBadRequest)
 		return
 	}
-
+	h.dg.GetData()
 	fmt.Fprintf(rw, "Data: %s\n", d)
 }
