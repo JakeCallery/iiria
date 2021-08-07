@@ -15,6 +15,7 @@ type ClientConfig struct {
 	Timezone        string
 	ExampleResponse []byte
 }
+
 func NewDefaultClientConfig() *ClientConfig {
 
 	return NewClientConfig(
@@ -29,7 +30,7 @@ func NewDefaultClientConfig() *ClientConfig {
 			"uvHealthConcern",
 		},
 		[]string{"1m"},
-		"America/New_York",
+		"UTC",
 	)
 }
 
