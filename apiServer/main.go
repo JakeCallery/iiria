@@ -35,12 +35,11 @@ func main() {
 	db.Init()
 	db.CheckConnection()
 
-	//TODO: add instanciate DataGetter here
-	//Pass that into NewCurrentWeather
-	//Have currentWeather handler call getData
 	dg := dataGetter.NewDataGetter(l, db)
+
 	wh := handlers.NewCurrentWeather(l, dg)
 	hh := handlers.NewHealth(l)
+
 	sm := http.NewServeMux()
 	sm.Handle("/weather", wh)
 	sm.Handle("/health", hh)

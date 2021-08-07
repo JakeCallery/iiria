@@ -11,7 +11,6 @@ import (
 	"github.com/jakecallery/iiria/worker/weatherClients"
 )
 
-//TODO: Set up cache client reference here
 type WeatherWorker struct {
 	l        *log.Logger
 	wcl      *weatherClients.ClientConfig

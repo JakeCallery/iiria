@@ -23,7 +23,6 @@ func NewDataGetter(l *log.Logger, db dbClient.DbClient) *DataGetter {
 }
 
 func (dg *DataGetter) GetData() (*data.WeatherData, error) {
-	dg.l.Println("Get me some data!")
 	dg.l.Printf("Time: %s", getServerTime())
 	res, err := dg.db.DataFromTime(getServerTime())
 
@@ -39,7 +38,6 @@ func (dg *DataGetter) GetData() (*data.WeatherData, error) {
 		dg.l.Printf("[ERROR]: Failed to fill weather data from json response: %v", err)
 		return nil, err
 	}
-	dg.l.Printf("***Result: %v", d.Temperature)
 
 	return d, nil
 }

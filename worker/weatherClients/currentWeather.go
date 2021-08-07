@@ -9,12 +9,10 @@ import (
 	"strings"
 	"time"
 
-
 	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
 func (c *ClientConfig) Call() (*WeatherData, error) {
-
 
 	var body []byte
 	var err error
@@ -33,7 +31,6 @@ func (c *ClientConfig) Call() (*WeatherData, error) {
 		body = []byte(c.ExampleResponse)
 	}
 
-
 	crd := WeatherData{}
 
 	err = jsonToStruct(body, &crd)
@@ -47,7 +44,6 @@ func (c *ClientConfig) Call() (*WeatherData, error) {
 
 }
 
-
 func buildURL(c *ClientConfig) string {
 
 	var sb strings.Builder
@@ -58,7 +54,6 @@ func buildURL(c *ClientConfig) string {
 	sb.WriteString("&units=imperial")
 	sb.WriteString("&timezone=" + c.Timezone)
 	sb.WriteString("&apikey=" + c.ApiKey)
-
 
 	return sb.String()
 }
@@ -75,7 +70,6 @@ func jsonToStruct(d []byte, crd *WeatherData) error {
 	return nil
 
 }
-
 
 func getData(c *ClientConfig) ([]byte, error) {
 
@@ -99,8 +93,8 @@ func getData(c *ClientConfig) ([]byte, error) {
 	}
 
 	log.Printf("Ratelimit-Limit: %v", resp.Header["Ratelimit-Limit"])
-	log.Printf("Ratelimit-Remaining: %v", resp.Header["Ratelimit-Remaining"])
 	log.Printf("Ratelimit-Reset: %v", resp.Header["Ratelimit-Reset"])
+	log.Printf("Ratelimit-Remaining: %v", resp.Header["Ratelimit-Remaining"])
 	log.Printf("X-Ratelimit-Limit-Day: %v", resp.Header["X-Ratelimit-Limit-Day"])
 	log.Printf("X-Ratelimit-Limit-Hour: %v", resp.Header["X-Ratelimit-Limit-Hour"])
 	log.Printf("X-Ratelimit-Limit-Second: %v", resp.Header["X-Ratelimit-Limit-Second"])

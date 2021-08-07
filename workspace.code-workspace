@@ -13,5 +13,8 @@
 			"path": "client"
 		}
 	],
-	"remoteAuthority": "wsl+Ubuntu-20.04"
+	"remoteAuthority": "wsl+Ubuntu-20.04",
+	"settings": {
+		"todo-tree.tree.showBadges": true
+	}
 }

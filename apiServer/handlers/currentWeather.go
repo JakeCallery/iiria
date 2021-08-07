@@ -20,12 +20,6 @@ func NewCurrentWeather(l *log.Logger, dg *dataGetter.DataGetter) *CurrentWeather
 
 func (h *CurrentWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	h.l.Println("Data Requested")
-	// d, err := ioutil.ReadAll(r.Body)
-	// if err != nil {
-	// 	h.l.Printf("Request Error: %v", err)
-	// 	http.Error(rw, "oops", http.StatusBadRequest)
-	// 	return
-	// }
 	wd, err := h.dg.GetData()
 
 	//TODO: Report proper error based on returned error.
