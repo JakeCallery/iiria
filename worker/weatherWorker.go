@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/jakecallery/iiria/worker/cacheClient"
@@ -63,30 +62,6 @@ func (ww *WeatherWorker) get(c *weatherClients.ClientConfig) {
 	if err != nil {
 		ww.l.Fatalf("[ERROR]: Error Calling API: %v", err)
 	}
-
-	ww.l.Printf("Time: %v", crd.Data.Timelines[0].Intervals[0].StartTime)
-	ww.l.Printf("Temp: %v", crd.Data.Timelines[0].Intervals[0].Values.Temperature)
-	ww.l.Printf("PrecipType: %v", keymaps.PrecipTypeCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.PrecipitationType)])
-	ww.l.Printf("WeatherCode: %v", keymaps.WeatherCodes[strconv.Itoa(crd.Data.Timelines[0].Intervals[0].Values.WeatherCode)])
-
-	rd := keymaps.NewRangeDesc()
-	uvIndex, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVIndex)
-
-	if err != nil {
-		ww.l.Printf("[ERROR]: Failed to retrieve a valid uvIndex: %v\n", err)
-		ww.l.Printf("[ERROR]: Setting to 'unknown'")
-		uvIndex = "Unknown"
-	}
-
-	uvHealth, err := rd.GetDesc(crd.Data.Timelines[0].Intervals[0].Values.UVHealthConcern)
-	if err != nil {
-		ww.l.Printf("[ERROR]: Failed to retrieve a valid uvHealth Concern: %v", err)
-		ww.l.Printf("[ERROR]: setting to 'Unknown'")
-		uvHealth = "Unknown"
-	}
-
-	ww.l.Printf("UVIndex: %v", uvIndex)
-	ww.l.Printf("UVHealthConcern: %v", uvHealth)
 
 	ww.ccl.Save(crd)
 }
