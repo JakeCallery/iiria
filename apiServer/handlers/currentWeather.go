@@ -19,7 +19,7 @@ func NewCurrentWeather(l *log.Logger, dg *dataGetter.DataGetter) *CurrentWeather
 }
 
 func (h *CurrentWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	h.l.Println("Data Requested")
+	setupResponse(&rw, r)
 	wd, err := h.dg.GetData()
 
 	//TODO: Report proper error based on returned error.
@@ -37,5 +37,13 @@ func (h *CurrentWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Header().Set("Content-Type", "application/json")
+
 	fmt.Fprintf(rw, "%s", respData)
+}
+
+func setupResponse(rw *http.ResponseWriter, req *http.Request) {
+	//FIXME: compare request origin to a list of good origins, then inject that origin here
+	(*rw).Header().Set("Access-Control-Allow-Origin", "*")
+	(*rw).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*rw).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
