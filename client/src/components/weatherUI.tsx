@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import BigAnswer from './bigAnswer'
+import WeatherDeatils from './weatherDetails'
 
 interface IWeatherProps {
 
@@ -50,10 +52,31 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
             })
     }, []);
 
+    const isRaining = (data: IWeatherData): boolean => {
+        console.log("data.weatherCode: ", data.weatherCode)
+        if(data.weatherCode >= 4000 && data.weatherCode <= 4999) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     return (
         <div>
-            {isLoading && <div>Loading...</div>}
-            {weatherData.temperature}
+            {isLoading && <h1>Loading Data...</h1>}
+            {!isLoading && 
+                <div>
+                    <h1>Is It Raining in Austin?</h1>
+                    <BigAnswer isRaining={isRaining(weatherData)}/>
+                    <WeatherDeatils 
+                        temp={weatherData.temperature.toString()}
+                        weatherDesc={weatherData.weatherDesc}
+                        uvIndex={weatherData.uvIndex.toString()}
+                        uvIndexDesc={weatherData.uvDesc}
+                        uvHealthDesc={weatherData.uvHealthDesc}
+                    />
+                </div>
+            }
         </div>
     )
 
