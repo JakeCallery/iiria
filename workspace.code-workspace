@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "client"
+		},
+		{
+			"path": "k8s"
 		}
 	],
 	"remoteAuthority": "wsl+Ubuntu-20.04",
