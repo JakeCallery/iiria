@@ -1,11 +1,12 @@
-FROM golang:1.16.7-alpine3.14
+FROM golang:1.16.7 AS builder
+WORKDIR /go/src/github.com/jakecallery/iiria/apiServer
+COPY . .
+RUN CGO_ENABLED=0 go build -o apiserver_app
+#CMD ["./apiserver"]
 
-RUN mkdir /app
-
-COPY . /app
-
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
 WORKDIR /app
-
-RUN go build -o main .
-
-CMD ["/app/main"]
+COPY --from=builder /go/src/github.com/jakecallery/iiria/apiServer/apiserver_app ./
+COPY --from=builder /go/src/github.com/jakecallery/iiria/apiServer/.env ./
+CMD ["./apiserver_app"]
