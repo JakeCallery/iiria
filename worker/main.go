@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/jakecallery/iiria/worker/cacheClient"
+	"github.com/jakecallery/iiria/worker/checkEnv"
 
 	"github.com/jakecallery/iiria/worker/weatherClients"
 	"github.com/joho/godotenv"
@@ -23,13 +24,25 @@ import (
 
 func main() {
 
-
 	l := log.New(os.Stdout, "[WorkerMain]: ", log.LstdFlags)
 
 	err := godotenv.Load("./.env")
 
 	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+		log.Printf("Error loading .env file: %v\n", err)
+		log.Println("This is fine as long as the proper environment variables are set.")
+	}
+
+	requiredVars := []string{
+		"apikey",
+		"latlong",
+		"baseurl",
+		"localonly",
+	}
+
+	result := checkEnv.CheckForRequiredEnvVars(l, requiredVars)
+	if !result {
+		l.Fatalln("[ERROR]: Not all required environment variables are set, exiting...")
 	}
 
 	cacheClient := cacheClient.NewRedisClient(log.New(os.Stdout, "[cacheClient]: ", log.LstdFlags))
