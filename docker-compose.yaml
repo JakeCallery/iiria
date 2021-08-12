@@ -1,5 +1,18 @@
 version: '3'
 services:
+  router:
+    container_name: router
+    image: iiria-router
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./router 
+    ports:
+      - "80:80"
+    depends_on: 
+      - frontend
+      - apiserver
+
   redis:
     container_name: redis
     hostname: redis
@@ -15,6 +28,11 @@ services:
     image: iiria-worker
     env_file:
       - .env
+    depends_on:
+      - redis
+    build:
+      dockerfile: Dockerfile
+      context: ./worker
 
   apiserver:
     container_name: apiserver
@@ -24,12 +42,22 @@ services:
       - "9090:9090"
     env_file:
       - .env
-    
+    depends_on: 
+      - redis
+    build:
+      dockerfile: Dockerfile
+      context: ./apiServer
+
   frontend:
     container_name: frontend
     hostname: frontend
     image: iiria-frontend 
     ports:
-      - "80:80"
+      - "8080:80"
     env_file: 
       - .env
+    depends_on: 
+      - apiserver
+    build:
+      dockerfile: Dockerfile
+      context: ./client

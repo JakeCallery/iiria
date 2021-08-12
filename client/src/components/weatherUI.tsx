@@ -40,7 +40,8 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
 
     const apiServerHost = process.env.REACT_APP_API_SERVER_HOST;
     const apiServerPort = process.env.REACT_APP_API_SERVER_PORT;
-    const weatherAPIEndpoint = 'http://' + apiServerHost + ':' + apiServerPort + '/weather';
+    //const weatherAPIEndpoint = 'http://' + apiServerHost + ':' + apiServerPort + '/api/weather';
+    const weatherAPIEndpoint = '/api/weather';
     console.log(weatherAPIEndpoint)
     useEffect(() => {
         axios
