@@ -1,0 +1,35 @@
+version: '3'
+services:
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis
+    ports:
+        - "6379:6379"
+    env_file:
+      - .env
+ 
+  worker:
+    container_name: worker 
+    hostname: worker
+    image: iiria-worker
+    env_file:
+      - .env
+
+  apiserver:
+    container_name: apiserver
+    hostname: apiserver
+    image: iiria-apiserver 
+    ports:
+      - "9090:9090"
+    env_file:
+      - .env
+    
+  frontend:
+    container_name: frontend
+    hostname: frontend
+    image: iiria-frontend 
+    ports:
+      - "80:80"
+    env_file: 
+      - .env

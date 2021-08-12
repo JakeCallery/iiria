@@ -45,7 +45,20 @@ func main() {
 		l.Fatalln("[ERROR]: Not all required environment variables are set, exiting...")
 	}
 
+	//Set up redis connection
+	rh := os.Getenv("redishost")
+	rp := os.Getenv("redisport")
+
+	if rh == "" {
+		rh = "localhost"
+	}
+
+	if rp == "" {
+		rp = "6379"
+	}
 	cacheClient := cacheClient.NewRedisClient(log.New(os.Stdout, "[cacheClient]: ", log.LstdFlags))
+	cacheClient.ServerAddr = rh
+	cacheClient.ServerPort = rp
 	cacheClient.Init()
 	err = cacheClient.CheckConnection()
 

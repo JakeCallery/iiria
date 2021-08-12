@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import { useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 import BigAnswer from './bigAnswer'
 import WeatherDeatils from './weatherDetails'
@@ -39,10 +38,14 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
     const [isLoading, setIsLoading]: [boolean, (isLoading: boolean) => void] = useState<boolean>(true);
     const [error, setError]: [string, (error: string) => void] = useState<string>(''); 
 
+    const apiServerHost = process.env.REACT_APP_API_SERVER_HOST;
+    const apiServerPort = process.env.REACT_APP_API_SERVER_PORT;
+    const weatherAPIEndpoint = 'http://' + apiServerHost + ':' + apiServerPort + '/weather';
+    console.log(weatherAPIEndpoint)
     useEffect(() => {
         axios
             .get<IWeatherData>(
-                'http://localhost:9090/weather', 
+                weatherAPIEndpoint, 
                 {
                     headers: {"Content-Type": "application/json"}
                 })
@@ -50,7 +53,7 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
                 setWeatherData(response.data);
                 setIsLoading(false);
             })
-    }, []);
+    }, [weatherAPIEndpoint]);
 
     const isRaining = (data: IWeatherData): boolean => {
         console.log("data.weatherCode: ", data.weatherCode)

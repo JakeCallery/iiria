@@ -31,7 +31,18 @@ func main() {
 	l := log.New(os.Stdout, "[weather-api]", log.LstdFlags)
 
 	//Set up redis connection
-	db := dbClient.NewRedisClient(l)
+	rh := os.Getenv("redishost")
+	rp := os.Getenv("redisport")
+
+	if rh == "" {
+		rh = "localhost"
+	}
+
+	if rp == "" {
+		rp = "6379"
+	}
+
+	db := dbClient.NewRedisClient(l, rh, rp)
 	db.Init()
 	db.CheckConnection()
 
