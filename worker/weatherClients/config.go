@@ -3,10 +3,10 @@ package weatherClients
 import (
 	"os"
 
-	"github.com/jakecallery/iiria/server/keymaps"
+	"github.com/jakecallery/iiria/worker/keymaps"
 )
 
-type clientConfig struct {
+type ClientConfig struct {
 	BaseURL         string
 	ApiKey          string
 	LatLong         string
@@ -16,7 +16,8 @@ type clientConfig struct {
 	ExampleResponse []byte
 }
 
-func NewDefaultClientConfig() *clientConfig {
+func NewDefaultClientConfig() *ClientConfig {
+
 	return NewClientConfig(
 		os.Getenv(keymaps.EnvKeyMap[keymaps.BaseURL]),
 		os.Getenv(keymaps.EnvKeyMap[keymaps.APIkey]),
@@ -29,7 +30,7 @@ func NewDefaultClientConfig() *clientConfig {
 			"uvHealthConcern",
 		},
 		[]string{"1m"},
-		"America/New_York",
+		"UTC",
 	)
 }
 
@@ -40,9 +41,11 @@ func NewClientConfig(
 	fields []string,
 	timeSteps []string,
 	timeZone string,
-) *clientConfig {
 
-	cc := new(clientConfig)
+) *ClientConfig {
+
+	cc := new(ClientConfig)
+
 	cc.BaseURL = baseURL
 	cc.ApiKey = apiKey
 	cc.LatLong = latLong

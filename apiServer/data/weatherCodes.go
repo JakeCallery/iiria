@@ -1,4 +1,9 @@
-package keymaps
+package data
+
+import (
+	"errors"
+	"strconv"
+)
 
 var WeatherCodes map[string]string = map[string]string{
 	"0":    "Unknown",
@@ -28,4 +33,13 @@ var WeatherCodes map[string]string = map[string]string{
 	"7101": "Heavy Ice Pellets",
 	"7102": "Light Ice Pellets",
 	"8000": "Thunderstorm",
+}
+
+func GetWeatherDescFromCode(c int) (string, error) {
+	str := strconv.Itoa(c)
+	if desc, ok := WeatherCodes[str]; ok {
+		return desc, nil
+	}
+
+	return "", errors.New("Bad weather code: " + strconv.Itoa(c))
 }

@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "apiServer"
+		},
+		{
+			"path": "worker"
+		},
+		{
+			"path": "tools"
+		},
+		{
+			"path": "client"
+		},
+		{
+			"path": "k8s"
+		}
+	],
+	"remoteAuthority": "wsl+Ubuntu-20.04",
+	"settings": {
+		"todo-tree.tree.showBadges": true
+	}
+}
