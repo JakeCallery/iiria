@@ -38,10 +38,20 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
     const [isLoading, setIsLoading]: [boolean, (isLoading: boolean) => void] = useState<boolean>(true);
     const [error, setError]: [string, (error: string) => void] = useState<string>(''); 
 
+    //TODO: Set this up more properly based on running from npm start or npm build 
+    let weatherAPIEndpoint: string = ""; 
+    
     const apiServerHost = process.env.REACT_APP_API_SERVER_HOST;
     const apiServerPort = process.env.REACT_APP_API_SERVER_PORT;
-    //const weatherAPIEndpoint = 'http://' + apiServerHost + ':' + apiServerPort + '/api/weather';
-    const weatherAPIEndpoint = '/api/weather';
+
+    if(apiServerHost === "" && apiServerPort === "") {
+        weatherAPIEndpoint = '/api/weather'
+    } else {
+        weatherAPIEndpoint = 'http://' + apiServerHost + ':' + apiServerPort + '/api/weather';
+    }
+    
+    console.log("**** Weather Endpoint: " + weatherAPIEndpoint);
+
     console.log(weatherAPIEndpoint)
     useEffect(() => {
         axios
