@@ -14,6 +14,12 @@
 		},
 		{
 			"path": "k8s"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "router"
 		}
 	],
 	"remoteAuthority": "wsl+Ubuntu-20.04",

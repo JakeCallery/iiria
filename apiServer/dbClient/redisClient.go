@@ -17,10 +17,10 @@ type RedisClient struct {
 	l           *log.Logger
 }
 
-func NewRedisClient(l *log.Logger) *RedisClient {
+func NewRedisClient(l *log.Logger, hostname string, port string) *RedisClient {
 	c := RedisClient{
-		ServerAddr: "localhost",
-		ServerPort: "6379",
+		ServerAddr: hostname,
+		ServerPort: port,
 		ServerPass: "",
 		isReady:    false,
 		ctx:        context.Background(),
