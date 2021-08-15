@@ -28,6 +28,7 @@ func NewDefaultClientConfig() *ClientConfig {
 			"weatherCode",
 			"uvIndex",
 			"uvHealthConcern",
+			"humidity",
 		},
 		[]string{"1m"},
 		"UTC",

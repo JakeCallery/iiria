@@ -15,6 +15,7 @@ type WeatherData struct {
 	UvDesc            string  `json:"uvDesc"`
 	UvHealthConcern   int     `json:"uvHealthConcern"`
 	UvHealthDesc      string  `json:"uvHealthDesc"`
+	Humidity          float64 `json:"humidity"`
 }
 
 func NewWeatherData() *WeatherData {

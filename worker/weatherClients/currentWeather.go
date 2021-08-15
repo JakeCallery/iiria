@@ -92,6 +92,8 @@ func getData(c *ClientConfig) ([]byte, error) {
 		return nil, err
 	}
 
+	log.Printf("DATA: %s", body)
+
 	log.Printf("Ratelimit-Limit: %v", resp.Header["Ratelimit-Limit"])
 	log.Printf("Ratelimit-Reset: %v", resp.Header["Ratelimit-Reset"])
 	log.Printf("Ratelimit-Remaining: %v", resp.Header["Ratelimit-Remaining"])

@@ -14,6 +14,7 @@ type CurrentResponseData struct {
 					WeatherCode       int     `json:"weatherCode"`
 					UVIndex           int     `json:"uvIndex"`
 					UVHealthConcern   int     `json:"uvHealthConcern"`
+					Humidity          float64 `json:"humidity"`
 				} `json:"values"`
 			} `json:"intervals"`
 		} `json:"timelines"`

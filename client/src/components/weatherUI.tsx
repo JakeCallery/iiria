@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
 import BigAnswer from './bigAnswer'
-import WeatherDeatils from './weatherDetails'
+import WeatherDetails from './weatherDetails'
 
 interface IWeatherProps {
 
@@ -18,6 +18,7 @@ interface IWeatherData {
     uvDesc: string;
     uvHealthDesc: string;
     precipitationDesc: string;
+    humidity: number;
 }
 
 const defaultWeatherData: IWeatherData = {
@@ -30,6 +31,7 @@ const defaultWeatherData: IWeatherData = {
     uvDesc: "none",
     uvHealthDesc: "none",
     precipitationDesc: "none",
+    humidity: -1.0,
 } 
 
 const WeatherUI = (props: IWeatherProps): JSX.Element => {
@@ -50,9 +52,6 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
         weatherAPIEndpoint = 'http://' + apiServerHost + ':' + apiServerPort + '/api/weather';
     }
     
-    console.log("**** Weather Endpoint: " + weatherAPIEndpoint);
-
-    console.log(weatherAPIEndpoint)
     useEffect(() => {
         axios
             .get<IWeatherData>(
@@ -82,12 +81,13 @@ const WeatherUI = (props: IWeatherProps): JSX.Element => {
                 <div>
                     <h1>Is It Raining in Austin?</h1>
                     <BigAnswer isRaining={isRaining(weatherData)}/>
-                    <WeatherDeatils 
+                    <WeatherDetails 
                         temp={weatherData.temperature.toString()}
                         weatherDesc={weatherData.weatherDesc}
                         uvIndex={weatherData.uvIndex.toString()}
                         uvIndexDesc={weatherData.uvDesc}
                         uvHealthDesc={weatherData.uvHealthDesc}
+                        humidity={weatherData.humidity.toString()}
                     />
                 </div>
             }
