@@ -60,8 +60,12 @@ func (ww *WeatherWorker) get(c *weatherClients.ClientConfig) {
 	crd, err := c.Call()
 
 	if err != nil {
-		ww.l.Fatalf("[ERROR]: Error Calling API: %v", err)
+		ww.l.Printf("[ERROR]: Error Calling API: %v", err)
+		return
 	}
 
-	ww.ccl.Save(crd)
+	err = ww.ccl.Save(crd)
+	if err != nil {
+		ww.l.Printf("[ERROR]: Could not save to cache: %v", err)
+	}
 }
